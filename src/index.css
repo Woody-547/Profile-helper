@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@theme {
+  --color-natural-bg: #F5F5F0;
+  --color-natural-nav: #EAEAE0;
+  --color-natural-panel: #FAF9F6;
+  --color-natural-card: #FDFCF8;
+  --color-natural-border: #D9D9CF;
+  
+  --color-natural-text: #2D2D2A;
+  --color-natural-accent: #5A5A40;
+  --color-natural-muted: #8A8A70;
+  --color-natural-light: #A0A090;
+}
+
+body {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  color: var(--color-natural-text);
+  background-color: var(--color-natural-bg);
+}
