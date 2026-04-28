@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
-import { Download, Layout, FileText, Upload } from 'lucide-react';
+import { Download, Layout, FileText, Upload, Settings as SettingsIcon } from 'lucide-react';
 import { PersonalInfoForm, ExperienceForm, EducationForm, SkillsForm, ProjectsForm } from '../components/EditorForms';
 import { ResumePreview } from '../components/ResumePreview';
 import { useResume } from '../context/ResumeContext';
@@ -9,11 +9,15 @@ import { AIEvaluationPanel } from '../components/AIEvaluationPanel';
 import { TemplateType } from '../types';
 import { exportToWord } from '../utils/exportWord';
 import { parseFile } from '../services/importService';
+import { SettingsDialog } from '../components/SettingsDialog';
+import { useSettings } from '../context/SettingsContext';
 
 export const EditorPage = () => {
   const { data, setData, template, setTemplate } = useResume();
+  const { settings } = useSettings();
   const [activeTab, setActiveTab] = useState<'details' | 'ai'>('details');
   const [isImporting, setIsImporting] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImportClick = () => {
@@ -26,7 +30,7 @@ export const EditorPage = () => {
     
     setIsImporting(true);
     try {
-      const parsedData = await parseFile(file);
+      const parsedData = await parseFile(file, settings);
       setData(prev => ({
         ...prev,
         ...parsedData,
@@ -125,8 +129,23 @@ export const EditorPage = () => {
             <Download size={18} />
             导出 PDF
           </button>
+          
+          <div className="h-4 w-px bg-natural-border mx-1" />
+          
+          <button 
+            onClick={() => setIsSettingsOpen(true)}
+            className="p-2 text-natural-muted hover:text-natural-accent transition rounded-lg hover:bg-natural-panel"
+            title="AI 设置"
+          >
+            <SettingsIcon size={20} />
+          </button>
         </div>
       </header>
+      
+      <SettingsDialog 
+        isOpen={isSettingsOpen} 
+        onClose={() => setIsSettingsOpen(false)} 
+      />
 
       {/* Main Layout */}
       <div className="flex-1 flex overflow-hidden">

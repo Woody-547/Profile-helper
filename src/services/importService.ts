@@ -1,8 +1,7 @@
 import mammoth from 'mammoth';
 import { GoogleGenAI, Type } from '@google/genai';
-import { ResumeData } from '../types';
-
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+import OpenAI from 'openai';
+import { ResumeData, LLMSettings } from '../types';
 
 const resumeSchema = {
   type: Type.OBJECT,
@@ -10,13 +9,13 @@ const resumeSchema = {
     personalInfo: {
       type: Type.OBJECT,
       properties: {
-        fullName: { type: Type.STRING, description: "Name of the person" },
-        jobTitle: { type: Type.STRING, description: "Current or target job title" },
+        fullName: { type: Type.STRING },
+        jobTitle: { type: Type.STRING },
         email: { type: Type.STRING },
         phone: { type: Type.STRING },
         location: { type: Type.STRING },
         website: { type: Type.STRING },
-        summary: { type: Type.STRING, description: "Professional summary or about me" },
+        summary: { type: Type.STRING },
       },
       required: ["fullName", "jobTitle", "email", "phone", "location", "website", "summary"]
     },
@@ -25,7 +24,7 @@ const resumeSchema = {
       items: {
         type: Type.OBJECT,
         properties: {
-          id: { type: Type.STRING, description: "Generate a unique string ID" },
+          id: { type: Type.STRING },
           company: { type: Type.STRING },
           role: { type: Type.STRING },
           startDate: { type: Type.STRING },
@@ -40,7 +39,7 @@ const resumeSchema = {
       items: {
         type: Type.OBJECT,
         properties: {
-          id: { type: Type.STRING, description: "Generate a unique string ID" },
+          id: { type: Type.STRING },
           school: { type: Type.STRING },
           degree: { type: Type.STRING },
           fieldOfStudy: { type: Type.STRING },
@@ -59,7 +58,7 @@ const resumeSchema = {
       items: {
         type: Type.OBJECT,
         properties: {
-          id: { type: Type.STRING, description: "Generate a unique string ID" },
+          id: { type: Type.STRING },
           title: { type: Type.STRING },
           description: { type: Type.STRING },
           link: { type: Type.STRING }
@@ -71,19 +70,22 @@ const resumeSchema = {
   required: ["personalInfo", "experience", "education", "skills", "projects"]
 };
 
-export async function parseFile(file: File): Promise<ResumeData> {
+export async function parseFile(file: File, settings: LLMSettings): Promise<ResumeData> {
     const ext = file.name.split('.').pop()?.toLowerCase();
 
     if (ext === 'docx') {
         const arrayBuffer = await file.arrayBuffer();
         const result = await mammoth.extractRawText({ arrayBuffer });
         const text = result.value;
-        return extractFromText(text);
+        return extractFromText(text, settings);
     } else if (ext === 'pdf') {
+        if (settings.provider === 'openai-compatible') {
+            throw new Error("目前非 Gemini 模型暂不支持直接解析 PDF 文件，请尝试上传 Word (docx) 格式。");
+        }
         const base64 = await toBase64(file);
-        return extractFromPDF(base64);
+        return extractFromPDF(base64, settings);
     } else {
-        throw new Error("仅支持上传PDF或DOCX格式的文件");
+        throw new Error("仅支持上传 PDF 或 DOCX 格式的文件");
     }
 }
 
@@ -99,8 +101,30 @@ function toBase64(file: File): Promise<string> {
     });
 }
 
-async function extractFromText(text: string): Promise<ResumeData> {
+async function extractFromText(text: string, settings: LLMSettings): Promise<ResumeData> {
     const prompt = "You are an expert at extracting information from resumes. Parse the following text into the structured JSON data. Ensure all strings are in Chinese (Simplified). Translate if necessary.\n\n" + text;
+    
+    if (settings.provider === 'openai-compatible') {
+        const openai = new OpenAI({
+            apiKey: settings.apiKey,
+            baseURL: settings.baseUrl,
+            dangerouslyAllowBrowser: true
+        });
+
+        const response = await openai.chat.completions.create({
+            model: settings.model || 'deepseek-chat',
+            messages: [
+                { role: 'system', content: 'You are an expert at extracting resume information into JSON. Respond only with valid JSON.' },
+                { role: 'user', content: prompt + '\n\nOutput must follow the schema for ResumeData.' }
+            ],
+            response_format: { type: 'json_object' }
+        });
+
+        return JSON.parse(response.choices[0].message.content || '{}') as ResumeData;
+    }
+
+    const apiKey = settings.apiKey || ((import.meta as any).env.VITE_GEMINI_API_KEY as string) || '';
+    const ai = new GoogleGenAI({ apiKey });
     
     const response = await ai.models.generateContent({
         model: "gemini-3.1-pro-preview",
@@ -118,9 +142,12 @@ async function extractFromText(text: string): Promise<ResumeData> {
     return JSON.parse(response.text.trim()) as ResumeData;
 }
 
-async function extractFromPDF(base64Data: string): Promise<ResumeData> {
+async function extractFromPDF(base64Data: string, settings: LLMSettings): Promise<ResumeData> {
     const prompt = "You are an expert at extracting information from resumes. Parse this PDF document into the structured JSON data. Ensure all strings are in Chinese (Simplified). Translate if necessary.";
     
+    const apiKey = settings.apiKey || ((import.meta as any).env.VITE_GEMINI_API_KEY as string) || '';
+    const ai = new GoogleGenAI({ apiKey });
+
     const response = await ai.models.generateContent({
         model: "gemini-3.1-pro-preview",
         contents: [

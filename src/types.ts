@@ -43,3 +43,12 @@ export interface ResumeData {
 }
 
 export type TemplateType = 'minimal' | 'professional';
+
+export type LLMProvider = 'gemini' | 'openai-compatible';
+
+export interface LLMSettings {
+  provider: LLMProvider;
+  apiKey: string;
+  baseUrl: string;
+  model: string;
+}

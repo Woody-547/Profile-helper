@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, FileText, Sparkles, Layout } from 'lucide-react';
+import { ArrowRight, FileText, Sparkles, Layout, Settings as SettingsIcon } from 'lucide-react';
+import { SettingsDialog } from '../components/SettingsDialog';
 
 export const HomePage = () => {
   const navigate = useNavigate();
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-natural-bg font-sans selection:bg-natural-nav text-natural-text">
@@ -15,14 +17,28 @@ export const HomePage = () => {
             </div>
             AI 简历
           </div>
-          <button 
-            onClick={() => navigate('/editor')}
-            className="bg-natural-accent text-white px-5 py-2 rounded-lg hover:opacity-90 font-medium text-sm transition-all shadow-sm"
-          >
-            前往编辑器
-          </button>
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={() => setIsSettingsOpen(true)}
+              className="p-2 text-natural-muted hover:text-natural-accent transition rounded-lg hover:bg-white border border-transparent hover:border-natural-border"
+              title="AI 设置"
+            >
+              <SettingsIcon size={20} />
+            </button>
+            <button 
+              onClick={() => navigate('/editor')}
+              className="bg-natural-accent text-white px-5 py-2 rounded-lg hover:opacity-90 font-medium text-sm transition-all shadow-sm"
+            >
+              前往编辑器
+            </button>
+          </div>
         </div>
       </nav>
+      
+      <SettingsDialog 
+        isOpen={isSettingsOpen} 
+        onClose={() => setIsSettingsOpen(false)} 
+      />
 
       <main className="max-w-7xl mx-auto px-6 py-20 pb-32">
         <div className="text-center max-w-3xl mx-auto mb-20 animate-in fade-in slide-in-from-bottom-6 duration-700 fill-mode-both">

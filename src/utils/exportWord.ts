@@ -1,4 +1,4 @@
-import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } from 'docx';
+import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType, BorderStyle } from 'docx';
 import { saveAs } from 'file-saver';
 import { ResumeData } from '../types';
 
@@ -155,7 +155,7 @@ export const exportToWord = async (data: ResumeData) => {
                             bottom: {
                                 color: "cccccc",
                                 space: 1,
-                                value: "single",
+                                style: BorderStyle.SINGLE,
                                 size: 6,
                             },
                         },

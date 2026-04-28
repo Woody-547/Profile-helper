@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useResume } from '../context/ResumeContext';
+import { useSettings } from '../context/SettingsContext';
 import { evaluateResume, EvaluationResult } from '../services/geminiService';
 import { Sparkles } from 'lucide-react';
 
 export const AIEvaluationPanel = () => {
   const { data } = useResume();
+  const { settings } = useSettings();
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<EvaluationResult | null>(null);
   const [error, setError] = useState('');
@@ -13,10 +15,10 @@ export const AIEvaluationPanel = () => {
     setLoading(true);
     setError('');
     try {
-      const evaluation = await evaluateResume(data);
+      const evaluation = await evaluateResume(data, settings);
       setResult(evaluation);
     } catch (err) {
-      setError('简历评估失败，请稍后重试。');
+      setError('简历评估失败，请检查 AI 设置（API Key 和 Base URL）是否正确。');
     } finally {
       setLoading(false);
     }
