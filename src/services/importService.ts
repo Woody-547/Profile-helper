@@ -124,6 +124,9 @@ async function extractFromText(text: string, settings: LLMSettings): Promise<Res
     }
 
     const apiKey = settings.apiKey || ((import.meta as any).env.VITE_GEMINI_API_KEY as string) || '';
+    if (!apiKey) {
+        throw new Error("未检测到 API Key。如果您在 GitHub Pages 上使用，请点击右上角的【AI 设置】配置您的 DeepSeek 或 Gemini 密钥。");
+    }
     const ai = new GoogleGenAI({ apiKey });
     
     const response = await ai.models.generateContent({
@@ -146,6 +149,9 @@ async function extractFromPDF(base64Data: string, settings: LLMSettings): Promis
     const prompt = "You are an expert at extracting information from resumes. Parse this PDF document into the structured JSON data. Ensure all strings are in Chinese (Simplified). Translate if necessary.";
     
     const apiKey = settings.apiKey || ((import.meta as any).env.VITE_GEMINI_API_KEY as string) || '';
+    if (!apiKey) {
+        throw new Error("未检测到 API Key。解析 PDF 需要配置 Gemini API Key（暂不支持 DeepSeek 解析 PDF）。");
+    }
     const ai = new GoogleGenAI({ apiKey });
 
     const response = await ai.models.generateContent({

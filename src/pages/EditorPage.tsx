@@ -36,12 +36,13 @@ export const EditorPage = () => {
         ...parsedData,
         personalInfo: {
           ...parsedData.personalInfo,
-          avatarUrl: prev.personalInfo.avatarUrl // Keep avatar if uploaded manually, or maybe parsedData lacks it
+          avatarUrl: prev.personalInfo.avatarUrl // Keep avatar if uploaded manually
         }
       }));
-    } catch (error) {
+    } catch (error: any) {
       console.error("Import failed:", error);
-      alert('导入失败，请确保您上传的是包含文本内容的有效PDF或Word文件。');
+      const message = error.message || '未知错误';
+      alert(`导入失败: ${message}`);
     } finally {
       setIsImporting(false);
       if (fileInputRef.current) {
