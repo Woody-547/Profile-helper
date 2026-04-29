@@ -57,7 +57,7 @@ export const MinimalTemplate: React.FC<{ data: ResumeData }> = ({ data }) => {
             {data.education.map((edu, index) => (
               <div key={edu.id || index}>
                 <div className="flex justify-between items-baseline">
-                  <span className="text-sm font-semibold text-natural-text">{edu.degree} {edu.fieldOfStudy && `in ${edu.fieldOfStudy}`}</span>
+                  <span className="text-sm font-semibold text-natural-text">{edu.degree ? `学历：${edu.degree}` : ''}{edu.degree && edu.fieldOfStudy ? '，' : ''}{edu.fieldOfStudy ? `专业：${edu.fieldOfStudy}` : ''}</span>
                   <span className="text-[10px] text-natural-muted">{edu.school || '学校名'}, {edu.endDate || edu.startDate}</span>
                 </div>
               </div>

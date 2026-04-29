@@ -90,7 +90,7 @@ export const exportToWord = async (data: ResumeData) => {
             children.push(new Paragraph({
                 children: [
                     new TextRun({ text: edu.school || '学校名', bold: true, size: 24 }),
-                    new TextRun({ text: ` — ${edu.degree} ${edu.fieldOfStudy ? `in ${edu.fieldOfStudy}` : ''}`, size: 24 }),
+                    new TextRun({ text: ` — ${edu.degree ? `学历：${edu.degree}` : ''}${edu.degree && edu.fieldOfStudy ? '，' : ''}${edu.fieldOfStudy ? `专业：${edu.fieldOfStudy}` : ''}`, size: 24 }),
                 ],
                 spacing: { before: 120 }
             }));

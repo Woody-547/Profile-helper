@@ -68,7 +68,7 @@ export const ProfessionalTemplate: React.FC<{ data: ResumeData }> = ({ data }) =
             <div className="space-y-4">
               {data.education.map((edu, index) => (
                 <div key={edu.id || index}>
-                  <h3 className="font-semibold text-sm text-natural-accent">{edu.degree} {edu.fieldOfStudy && `in ${edu.fieldOfStudy}`}</h3>
+                  <h3 className="font-semibold text-sm text-natural-accent">{edu.degree ? `学历：${edu.degree}` : ''}{edu.degree && edu.fieldOfStudy ? '，' : ''}{edu.fieldOfStudy ? `专业：${edu.fieldOfStudy}` : ''}</h3>
                   <div className="flex justify-between items-center">
                     <span className="text-xs font-medium text-natural-text">{edu.school || '学校名'}</span>
                     <span className="text-[10px] font-medium tracking-wide text-natural-muted uppercase">{edu.startDate} {edu.endDate && `— ${edu.endDate}`}</span>
