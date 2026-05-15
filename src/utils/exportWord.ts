@@ -24,7 +24,13 @@ export const exportToWord = async (data: ResumeData) => {
         }));
     }
     
-    const contactInfo = [data.personalInfo.email, data.personalInfo.phone, data.personalInfo.location, data.personalInfo.website].filter(Boolean).join(" | ");
+    const contactInfo = [
+        data.personalInfo.email, 
+        data.personalInfo.phone, 
+        data.personalInfo.birthDate,
+        data.personalInfo.location, 
+        data.personalInfo.website
+    ].filter(Boolean).join(" | ");
     if (contactInfo) {
         children.push(new Paragraph({
             alignment: AlignmentType.CENTER,

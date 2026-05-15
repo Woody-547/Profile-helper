@@ -20,6 +20,7 @@ export const MinimalTemplate: React.FC<{ data: ResumeData }> = ({ data }) => {
         <div className="flex flex-wrap justify-center gap-4 mt-3 text-[10px] text-natural-muted font-medium">
           {data.personalInfo.email && <span>{data.personalInfo.email}</span>}
           {data.personalInfo.phone && <span>{data.personalInfo.phone}</span>}
+          {data.personalInfo.birthDate && <span>{data.personalInfo.birthDate}</span>}
           {data.personalInfo.location && <span>{data.personalInfo.location}</span>}
           {data.personalInfo.website && <span>{data.personalInfo.website}</span>}
         </div>

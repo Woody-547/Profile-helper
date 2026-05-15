@@ -21,6 +21,7 @@ export const ProfessionalTemplate: React.FC<{ data: ResumeData }> = ({ data }) =
         <div className="space-y-4 mb-8 text-xs text-natural-text">
           {data.personalInfo.email && <div><span className="block font-bold text-[10px] text-natural-accent uppercase tracking-widest mb-1">邮箱</span>{data.personalInfo.email}</div>}
           {data.personalInfo.phone && <div><span className="block font-bold text-[10px] text-natural-accent uppercase tracking-widest mb-1">电话</span>{data.personalInfo.phone}</div>}
+          {data.personalInfo.birthDate && <div><span className="block font-bold text-[10px] text-natural-accent uppercase tracking-widest mb-1">出生年月日</span>{data.personalInfo.birthDate}</div>}
           {data.personalInfo.location && <div><span className="block font-bold text-[10px] text-natural-accent uppercase tracking-widest mb-1">所在地</span>{data.personalInfo.location}</div>}
           {data.personalInfo.website && <div><span className="block font-bold text-[10px] text-natural-accent uppercase tracking-widest mb-1">个人链接</span>{data.personalInfo.website}</div>}
         </div>

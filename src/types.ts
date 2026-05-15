@@ -5,6 +5,7 @@ export interface PersonalInfo {
   email: string;
   phone: string;
   location: string;
+  birthDate?: string;
   website: string;
   summary: string;
 }

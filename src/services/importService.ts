@@ -14,6 +14,7 @@ const resumeSchema = {
         email: { type: Type.STRING },
         phone: { type: Type.STRING },
         location: { type: Type.STRING },
+        birthDate: { type: Type.STRING },
         website: { type: Type.STRING },
         summary: { type: Type.STRING },
       },

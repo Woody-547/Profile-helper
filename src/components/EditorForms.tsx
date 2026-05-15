@@ -89,6 +89,10 @@ export const PersonalInfoForm = () => {
           <input name="location" value={data.personalInfo.location} onChange={handleChange} className="w-full border border-natural-border rounded-xl p-2 focus:ring-2 focus:ring-natural-accent focus:border-transparent outline-none" placeholder="例如：北京，朝阳区" />
         </div>
         <div className="col-span-2 sm:col-span-1">
+          <label className="block text-sm font-medium mb-1 text-natural-text">出生年月日</label>
+          <input name="birthDate" value={data.personalInfo.birthDate || ''} onChange={handleChange} className="w-full border border-natural-border rounded-xl p-2 focus:ring-2 focus:ring-natural-accent focus:border-transparent outline-none" placeholder="例如：1995年5月" />
+        </div>
+        <div className="col-span-2 sm:col-span-1">
           <label className="block text-sm font-medium mb-1 text-natural-text">个人主页 / 链接</label>
           <input name="website" value={data.personalInfo.website} onChange={handleChange} className="w-full border border-natural-border rounded-xl p-2 focus:ring-2 focus:ring-natural-accent focus:border-transparent outline-none" placeholder="例如：github.com/zhangsan" />
         </div>
